@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field,useFormik,FieldArray, FormikProvider } from 'formik'
+import { Field,useFormik,FieldArray } from 'formik'
 import * as Yup from 'yup';
 
 
@@ -50,7 +50,7 @@ const SignupForm=()=>{
     ;
 
     return(
-        <FormikProvider value={formik}>
+        // <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
                 <label htmlFor="firstName">First Name</label>
                 <input 
@@ -107,7 +107,7 @@ const SignupForm=()=>{
                      <div className='form-control'>
             <label>hobbies</label>
               <FieldArray name='hobbies'>
-                {fieldArrayProps => {
+                {(fieldArrayProps) => {
                   const {remove, form,insert } = fieldArrayProps
                   const { values } = form
                   const { hobbies } = values
@@ -115,7 +115,7 @@ const SignupForm=()=>{
                   // console.log('Form errors', form.errors)
                   return (
                     <div>
-                        <form onSubmit={formik.handleSubmit}/>
+                        {/* <form onSubmit={formik.handleSubmit}/> */}
                       {hobbies.map((hobbie, index) => (
                         <div key={index}>
                           <Field name={`hobbies${index},hobbiesname`} />
@@ -168,7 +168,7 @@ const SignupForm=()=>{
             
                     
             </form>
-             </FormikProvider>
+            //  </FormikProvider>
         
         
     );
