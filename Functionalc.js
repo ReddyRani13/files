@@ -1,75 +1,12 @@
-import React from 'react';
-import { Formik, Field, Form,ErrorMessage,FieldArray } from 'formik';
+import {useState,useEffect} from 'react'
+import {Formik,Form,ErrorMessage,Field,FieldArray} from 'formik'
 import * as Yup from 'yup'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-//import NewSelect from './NewSelect';
 
- const onSubmit= (values,onSubmitProps)=>{  
-  console.log('Form data', values)
- 
-  alert(JSON.stringify(values,null,2))
-   onSubmitProps.setSubmitting(false)
-  onSubmitProps.resetForm()
-
-}
-
-const validationSchema=Yup.object({
-  firstName:Yup.string()
-        .min(3)
-        .max(5,"min 3 max 5 characters are allowed")
-        .required("required")
-        .matches(/^[A-Za-z]*$/, "Only alphabets are allowed for this field "),
-        lastName:Yup.lazy((value)=>{
-        if(value!==undefined){
-          return Yup.string().min(3,'min 3 letters').max(5,'max 5 letters').required("required")
-          .matches(/^[A-Za-z]*$/, "Only alphabets are allowed for this field ")
-        }
-        return Yup.mixed().notRequired()   
-      }),
-       UserName:Yup.string()
-        .min(5)
-        .max(50,"min 3 max 5 characters are allowed")
-        .required("required"),
-        email:Yup.string()
-        .min(3)
-        .max(50,"min 3 and max 20 characters are allowed")
-        .email('INvalid email address')
-        .required("Required"),
-        mobilenumberOne:Yup.number()
-        .min(100000000,"minimum 10 values")
-        .max(9999999999,"exceeded limit")
-        
-        .required("required"),
-        // .max(10,"exceeded 10 numbers"),
-        mobilenumberTwo:Yup.number().when('mobilenumberOne',{
-          is:mobilenumberOne=>mobilenumberOne,
-          then:Yup.number()
-          .min(100000000,"minimum 10 values")
-        .max(9999999999,"exceeded limit")
-        .required("required")
-         }),
-        
-        Hobbies:Yup.array().of(Yup.object().shape({
-        Hobbiesname:Yup.string().required('required'),
-        Hobbiestype:Yup.string().required("Required")
-        })),
-      //    countries: Yup.string().required('country is required!'),
-      //    states: Yup.string().required('state is required!'),
-      //    cities: Yup.string().required('District is required!'),
-         picked:Yup.string().required("Required"),
-        
-  checked: Yup.array().min(1, 'required'),
-  Textarea:Yup.mixed().required("Required")
-        
-  })
-
-
- 
-class Final extends React.Component{
-  constructor(){
-    super()
-    this.state={firstName:"",
+function Functionalc(){
+    const[state,setState]=useState({
+		firstName:"",
     lastName:'',
     UserName:'',
     email:'',
@@ -80,59 +17,120 @@ class Final extends React.Component{
           checked: [],
           Textarea:"",
           startDate:new Date(),
-          countries:[],
-          states:[],cities:[],
-          selectedCountry:'',
-          selectedState:'',
-          selectedCity:''
-        }
-        this.changeCountry = this.changeCountry.bind(this);
-		this.changeState = this.changeState.bind(this);
-    this.changeCity = this.changeCity.bind(this);
-  }
+        countries : [],
+			states : [],
+			cities : [],
+			selectedCountry : '--Choose Country--',
+			selectedState : '--Choose State--',
+            selectedCity:'--choose City',
+             
+		
+
+    })
+    
+
+    useEffect(() => {
+        setState({...state,countries:[
+          { name: 'India', states: [ {name: 'andhrapradesh' ,cities: ['Delhi', 'Kolkata', 'Mumbai', 'Bangalore']} ] },
+  { name: 'Germany', states: [ {name: 'A', cities: ['Duesseldorf', 'Leinfelden-Echterdingen', 'Eschborn']} ] },
+  { name: 'Spain', states: [ {name: 'B', cities: ['Barcelona']} ] },
+  { name: 'USA', states: [ {name: 'C', cities: ['Downers Grove']} ] },
+  { name: 'Mexico', states: [ {name: 'D', cities: ['Puebla']} ] },
   
+]})
 
-  componentDidMount() {
-		this.setState({
-			countries : [
-                { name: 'India', states: [ {name: 'andhrapradesh' ,cities: ['Delhi', 'Kolkata', 'Mumbai', 'Bangalore']} ] },
-				{ name: 'Germany', states: [ {name: 'A', cities: ['Duesseldorf', 'Leinfelden-Echterdingen', 'Eschborn']} ] },
-				{ name: 'Spain', states: [ {name: 'B', cities: ['Barcelona']} ] },
-				{ name: 'USA', states: [ {name: 'C', cities: ['Downers Grove']} ] },
-				{ name: 'Mexico', states: [ {name: 'D', cities: ['Puebla']} ] },
-				
-			]
-		});
-  }
-  changeCountry(event) {
-		this.setState({selectedCountry: event.target.value});
-		this.setState({states : this.state.countries.find(cntry => cntry.name === event.target.value).states});
+    },[])
+
+ const changeCountry=function(e) {
+		setState({selectedCountry: e.target.value});
+		setState({states :state.countries.find(cntry => cntry.name === e.target.value).states});
 	}
 
-	changeState(event) {
-		this.setState({selectedState: event.target.value});
-		// const stats = this.state.countries.find(cntry => cntry.name === this.state.selectedCountry)
-		this.setState({cities :this.state.states.find(stat => stat.name === event.target.value).cities});
+const changeState=function(e) {
+		setState({selectedState: e.target.value});
+		// const stats = state.countries.find(cntry => cntry.name === state.selectedCountry).states;
+		setState({cities :state.states.find(stat => stat.name === e.target.value).cities});
 	}
-changeCity(event){
-  this.setState({selectedCity:event.target.value})
-}
+    const changeCity=function(e){
+        setState({selectedCity:e.target.value});
+		
+    }
+	
+	const onSubmit= (values,onSubmitProps)=>{  
+		console.log('Form data', values)
+	   
+		alert(JSON.stringify(values,null,2))
+		 onSubmitProps.setSubmitting(false)
+		onSubmitProps.resetForm()
+	  
+	  }
+	const validationSchema=Yup.object({
+		firstName:Yup.string()
+				  .min(3)
+				  .max(5,"min 3 max 5 characters are allowed")
+				  .required("required")
+				  .matches(/^[A-Za-z]*$/, "Only alphabets are allowed for this field "),
+				  lastName:Yup.lazy((value)=>{
+					if(value!==undefined){
+						return Yup.string().min(3,'min 3 letters').max(5,'max 5 letters')
+            .required("required")
+            .matches(/^[A-Za-z]*$/, "Only alphabets are allowed for this field ")
+            
+					}
+					return Yup.mixed().notRequired()   
+				}),
+				 UserName:Yup.string()
+				  .min(5)
+				  .max(50,"min 3 max 5 characters are allowed")
+				  .required("required"),
+				  email:Yup.string()
+				  .min(3)
+				  .max(50,"min 3 and max 20 characters are allowed")
+				  .email('INvalid email address')
+				  .required("Required"),
+				  mobilenumberOne:Yup.number()
+				  .min(100000000,"minimum 10 values")
+          .max(9999999999,"exceeded limit")
+				  
+				  .required("required"),
+				  // .max(10,"exceeded 10 numbers"),
+				  mobilenumberTwo:Yup.number().when('mobilenumberOne',{
+					  is:mobilenumberOne=>mobilenumberOne,
+					  then:Yup.number()
+					  .min(100000000,"minimum 10 values")
+          .max(9999999999,"exceeded limit")
+          .required("required")
+				   }),
+				  
+				  Hobbies:Yup.array().of(Yup.object().shape({
+					Hobbiesname:Yup.string().required('required'),
+					Hobbiestype:Yup.string().required("Required")
+				  })),
+				//    countries: Yup.string().required('country is required!'),
+				//    states: Yup.string().required('state is required!'),
+				//    cities: Yup.string().required('District is required!'),
+				   picked:Yup.string().required("Required"),
+				  
+	  checked: Yup.array().min(1, 'required'),
+	  Textarea:Yup.mixed().required("Required")
+				  
+	  })
 
-  render(){
-    return(
-      
-  <div>
+
+return(
+
+    <div>
   <center>
   <h1>Form Creation </h1>
   <Formik
-  initialValues={this.state}
+  initialValues={state}
   validationSchema={validationSchema}
   onSubmit={onSubmit}
     >
-    {({ setFieldValue,values,errors,touched}) => (
+    {({values,errors,touched,setFieldValue}) => (
       <Form>
         <label htmlFor="firstName">firstName</label>
-          <Field type="text"
+          <Field as="input"
           id="firstName"
           name="firstName"/>
           {/* <ErrorMessage name="firstName"/> */}
@@ -143,19 +141,19 @@ changeCity(event){
           
           <div className="form-control">
               <label htmlFor="lastName">lastName</label>
-              <Field type="text" id="lastName" name="lastName"/>
+              <Field as="input" id="lastName" name="lastName"/>
               <ErrorMessage name="lastName"/>
           </div>
          <div className="form-control">
               <label htmlFor="UserName">UserName</label>
-              <Field type="text" id="UserName" name="UserName"
+              <Field as="input" id="UserName" name="UserName"
           />
 
       <ErrorMessage name="UserName"/>
     </div>
      <div className="form-control">
               <label htmlFor="email">email</label>
-              <Field type="text" id="email" name="email" />
+              <Field as="input" id="email" name="email" />
               <ErrorMessage name="email"/>
 </div>
 
@@ -204,17 +202,18 @@ changeCity(event){
 
    <div className="form-control">
               <label htmlFor="mobilenumberOne">mobilenumberone</label>
-              <Field type="text" id="mobilenumberOne" name="mobilenumberOne" />
+              <Field type="number" id="mobilenumberOne" name="mobilenumberOne" />
               <ErrorMessage name="mobilenumberOne"/>
               <br></br>
               <label htmlFor="mobilenumberTwo">mobilenumbertwo</label>
-              <Field type="text" id="mobilenumberTwo" name="mobilenumberTwo" />
+              <Field type="number" id="mobilenumberTwo" name="mobilenumberTwo" />
               <ErrorMessage name="mobilenumberTwo"/>
               <br></br>
               </div>
               <div className="form-control">
               <label>Textarea</label>
               <br></br>
+              {/* <Field  name="Textarea" as='Textarea' id="Textarea" rows='6' col="6"/> */}
               <Field as="textarea" id="Textarea" name="Textarea" rows='6' col="6"/>
               <ErrorMessage name="Textarea"/>
               </div>
@@ -252,43 +251,56 @@ changeCity(event){
           <br></br>
           <ErrorMessage name="checked"/>
         </div>
-        <div>
+       
+
+{/*       
+        <button type="submit">submit</button>
+              <button type="reset">cancel</button>
+      </Form>
+    )}
+  </Formik>
+  </center>
+</div> */}
+				
+	
+				<div>
 					<label>Country</label>
-					<select placeholder="Country" name="countries" value={this.state.selectedCountry} onChange={this.changeCountry}>
-                    <option>--Choose Country--</option>
-						{this.state.countries&&this.state.countries.map((e, key) => {
+					<select placeholder="Country" name="countries" value={state.selectedCountry} onChange={changeCountry}>
+                    {/* <option>--Choose Country--</option> */}
+						{state.countries&&state.countries.map((e, key) => {
 							return <option key={key}>{e.name}</option>;
 						})}
 					</select>
+				</div>
+				<div className="form-control">
+					<label>state</label>
+					<Field  name="states" as="select" value={state.selectedState} onChange={changeState}>
+					<option>--Choose State--</option>
+						{state.states&&state.states.map((e, key) => {
+							return <option key={key}>{e.name}</option>;
+						})}
+					</Field>
 				</div>
 
-				<div>
-					<label>State</label>
-					<select placeholder="State" name="states" value={this.state.selectedState} onChange={this.changeState}>
-                    <option>--Choose State--</option>
-						{this.state.states&&this.state.states.map((e, key) => {
-							return <option key={key}>{e.name}</option>;
-						})}
-					</select>
-				</div>
-				
-			 {/* <div>
+{/* 
+                    <div>
 					<label>City</label>
-					<select placeholder="City" id="cities" name="cities">
+					<select placeholder="City">
 						 <option>--Choose City--</option> 
-						{this.state.cities.map((e, key) => {
+						{state.cities.map((e, key) => {
 							return <option key={key}>{e}</option>;
 						})}
 					</select>
 				</div>  */}
-                <div>
-					<label>City</label>
-					<select placeholder="City" value={this.state.selectedCity} onChange={this.changeCity}>
+
+<div className="form-control">
+					<label>city</label>
+					<Field name="Cites" as="select"value={state.selectedCity} onChange={changeCity}>
 						<option>--Choose City--</option>
-						{this.state.cities&&this.state.cities.map((e, key) => {
-							return <option key={key}>{e}</option>;
+						{state.cities&&state.cities.map((e, key) => {
+							return <option key={key}>{e.name}</option>;
 						})}
-					</select>
+					</Field>
 				</div>
         <div className="row ml-4 mr-4">
                   <div className="form-group col-3 mb-2">
@@ -300,10 +312,15 @@ changeCity(event){
                       onChange={date => setFieldValue('startDate', date)}
                     />
                   </div>
-                  </div>
 
-      
-        <button type="submit">submit</button>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-5 mb-4"></div>
+                 
+                </div>
+			
+    
+				<button type="submit">submit</button>
               <button type="reset">cancel</button>
       </Form>
     )}
@@ -311,9 +328,10 @@ changeCity(event){
   </center>
 </div>
 
-    )
-  }
-}
-       
-export default Final;
+)
 
+
+}
+
+
+export default Functionalc;
