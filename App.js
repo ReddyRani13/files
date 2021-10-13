@@ -1,94 +1,22 @@
-import React, { Component } from 'react'
-import Childc from './Components/Childc'
-import FunState from './Components/FunState'
-import Effect from './Components/Effect'
-import ListRendering from './Components/ListRendering'
-import { UserProvider } from './Components/UserContext'
-import ComponentA from './Components/ComponentA'
-import ComponentD from './Components/ComponentD'
-import Finall3 from './Components/Finall3'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
+import React from "react";
+import { Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import AddPost from "./components/AddContact";
+import EditContact from "./components/EditContact";
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
 
 
-
-export class App extends Component {
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-             name:'rani'
-        }
-    }
-    handleClick=()=>{
-        this.setState({name:'joe'})
-    }
-    
-    render() {
-        return (
-            <Router>
-            <div>
-                
-            
-            <nav>
-            <ul>
-              <li>
-                <Link to="/Props">props</Link>
-              </li>
-              <li>
-                <Link to="/Effect">Effect</Link>
-              </li>
-              <li>
-                <Link to="/ComponenetA">ComponentA</Link>
-              </li>
-              <li>
-                <Link to="/ComponenetD">ComponentD</Link>
-              </li>
-              <li>
-                <Link to="/FunState">FunState</Link>
-              </li>
-              <li>
-                <Link to="/ListRendering">ListRendering</Link>
-              </li>
-              <li>
-                <Link to="/Finall3">Finall3</Link>
-              </li>
-            </ul>
-          </nav>
-  
-          <Switch>
-            <Route path="/Props">
-            <Childc  name={this.state.name} handleClick={this.handleClick}/>
-            </Route>
-            <Route path="/FunState">
-              <FunState />
-            </Route>
-            <Route path="/Effect">
-              <Effect />
-            </Route>
-            <Route path="/ListRendering">
-              <ListRendering />
-            </Route>
-            <Route path="/Finall3">
-              <Finall3 />
-            </Route>
-            
-          
-          </Switch>
-          <UserProvider value="john">
-    <ComponentA />
-    <ComponentD/>
-        </UserProvider>
-          </div>
-    </Router>
-    
+const App = () => {
+  return (
+    <div className="App">
       
-        )
-    }
-}
-
-export default App
+      <ToastContainer />
+      <Navbar />
+      <Route exact path="/" component={() => <Home />} />
+      <Route exact path="/add" component={() => <AddPost />} />
+      <Route exact path="/edit/:id" component={() => <EditContact />} />
+    </div>
+  );
+};
+export default App;
