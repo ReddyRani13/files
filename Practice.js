@@ -1,104 +1,42 @@
 import React from 'react'
-import {Formik,Form,Field,ErrorMessage,FieldArray} from 'formik'
-import * as Yup from 'yup'
+import {increment,decrement,Reset,asysinc,fetchUser,fetchError,fetchSuccess} from '../Redux/Count/Practice/PracticeAction'
+import { useDispatch,useSelector } from 'react-redux'
+import { useState } from 'react'
 
-
-const initialValues={
-    firstName:"",
-    lastName:"",
-    email:"",
-    social:{
-        instagram:'',
-        whtasup:"",
-    },
-    hobbies:[''],
-    toggle:false,
-    checked:[]
-
-}
-const onSubmit=values=>{
-    console.log("values",values)
-    alert(JSON.stringify(values,null,2))
-
-}
-const validationSchema=Yup.object({
-    firstName:Yup.string()
-    .required("Required")
-})
-
-const Practice=()=>{
-    return(
-        <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onsubmit}>
-        <Form>
-            
-            <label htmlFor="firstName">firstName</label>
-            <Field type="text"
-            id="firstName"
-            name="firstName"/>
-            <ErrorMessage name="firstName"/>
-
-
-            <label htmlFor="instagram">instagram</label>
-            <Field type="text"
-            id="instagram"
-            name="social.instagram"/>
-              <label htmlFor="whatsup">whatsup</label>
-            <Field type="text"
-            id="instagram"
-            name="social.whatsup"/>
-
-            <label htmlFor="hobbies">hobbies</label>
-            <FieldArray type="text"
-            id="hobbies"
-            name="hobbies">
-                {
-                    (fieldArrayProps)=>{
-                        const{push,remove,form}=fieldArrayProps
-                        const{values}=form
-                        const{hobbies}=values
-                        return(
-                            <div>
-                                {
-                                    hobbies.map((hobbie,index)=>(
-                                        <div key={index}>
-                                        <Field name={`hobbies[${index}]`}/>
-                                        <button type="button" onClick={()=>push(index)}>{''}+{''}</button>
-                                        {
-                                            index > 0 &&(
-                                                <button type="button" onClick={()=>remove(index)}>{''}-{''}</button>
-                                            )
-                                        }
-                                          {/* <button type="button" onClick={()=>push(index)}>{''}+{''}</button> */}
-                                        </div>
-                                    ))
-                                }
-                                </div>
-                                
-                        )
-
-                    }
-                }
-                
-                
-
+export function Practice(props){
+  
+  const state = useSelector(state => state.Counterp.count)
+  const {name}=props
+  const[votes,setVotes]=useState(0)
+    const  dispatch = useDispatch()
+   
+    const handleIncrement=()=>{
+      dispatch(increment())
+      setVotes(votes+1)
+    }
+    const handleDecremenet=()=>{
+      dispatch(decrement())
+      setVotes(votes-1)
+    }
+    const handleReset=()=>{
+      dispatch(Reset())
+      setVotes(0)
       
-     
-        
-                </FieldArray>
+    }
 
-                            <button type="submit">submit</button>
-        </Form>
-        </Formik>
-    )
+  return(
+    <div>
+      <h1>totalcount:{state}</h1>
+     <h1> {name}</h1>
+     <h3>{votes}</h3>
+      <button onClick={handleIncrement}>increment</button>
+       <button onClick={handleDecremenet}>increment</button>
+       <button onClick={handleReset}>Reset</button>
+       <button onClick={()=>dispatch(asysinc())}>increase 5</button>
+       <button onClick={()=>dispatch(fetchUser())}>api</button>
+       <button onClick={()=>dispatch(fetchError())}>api</button>
+       <button onClick={()=>dispatch(fetchSuccess())}>api</button>
+
+    </div>
+  )
 }
-
-export default Practice;
-
-
-
-
-        
-    
